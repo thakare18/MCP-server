@@ -9,17 +9,20 @@ const server = mcpServer({
     version: "1.0.0"
 });
 
-// add the additional tools 
+// add the additional #tools# 
 
 server.registerTool("add",{
     title: "Add Numbers",
     description: "Add two numbers",
-    inputSchema: {a: z.number(), b: z.number()}
+    inputSchema: z.object({ 
+    a: z.number().describe("First number to add"),
+    b: z.number().describe("Second number to add")
+})
 
 },
 async ({a, b}) => {
     return {
-        content: [{type: "text", text: `${a + b}`}]
+        content: [{type: "text", text: String(a + b)}]
     }
 });
 
