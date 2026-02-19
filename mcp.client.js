@@ -4,6 +4,9 @@ dotenv.config();  //
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+
+const tools = [];  // store tools provided by server
+
 const weatherFunctionDeclaration = {
     name: "getCurrentWeather",
     description: "Get the current weather in a given location",
@@ -43,7 +46,21 @@ const client = new Client({
     await client.connect(transport);
 
     // listTools() method on client - this lists all tools that mcp server provides
-    const response = await client.listTools();
-    console.log(response)
-    console.log(weatherFunctionDeclaration);
+    client.listTools().then(response => {
+
+        response.tools.forEach(tool=> {
+            tools.push({
+                name: tool.name,
+                description: tool.description,
+                parameters: {
+                    type: "OBJECT",
+                    properties: tool.inputSchema.properties,
+                    required: tool.inputSchema.required || []
+
+                }
+            })
+        })
+        console.log("Tools provided by server:", tools);
+    })
+    
 })();
