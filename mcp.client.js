@@ -46,17 +46,26 @@ const client = new Client({
                 }
             })
         })
-        const aiResponse = await ai.models.generateContent({
-  model: 'gemini-2.0-flash',
-  contents: 'add 2 and 3',
-  config: {
-    tools: [{
-      functionDeclarations: tools
-    }],
-    
-  },
+        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash-002"
+
+ });
+        const result = await model.generateContent({
+  contents: [{ role: 'user', parts: [{ text: 'add 2 and 3' }] }],
+  tools: [{
+    functionDeclarations: tools
+  }]
 });
-console.log("AI Response:", aiResponse);
-    })
-    
+
+const aiResponse = result.response;
+const functionCalls = aiResponse.functionCalls();
+
+console.log("aiResponse", aiResponse, functionCalls);
+
+functionCalls.forEach( async call => {
+   const toolResponse = await client.callTool({
+        name: call.name,
+        arguments: call.arguments
+    });
+});
+    });
 })();
