@@ -1,5 +1,28 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import dotenv from "dotenv";
+dotenv.config();  // 
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const weatherFunctionDeclaration = {
+    name: "getCurrentWeather",
+    description: "Get the current weather in a given location",
+    parameters: {
+        type: "object",
+        properties: {
+            location: {
+                type: "string",
+                description: "The city"
+            },
+        },
+        required: ["location"],
+    },
+};
+
+
+
+
+const ai = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY)
 
 
 // created a transport - transport tells how the client should communicate with the mcp server, like streamable http or stdio
@@ -21,5 +44,6 @@ const client = new Client({
 
     // listTools() method on client - this lists all tools that mcp server provides
     const response = await client.listTools();
-    console.log(response);
+    console.log(response)
+    console.log(weatherFunctionDeclaration);
 })();
