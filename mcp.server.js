@@ -1,5 +1,7 @@
-import {mcpServer} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { mcpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+
 import {z} from "zod";
 
 
@@ -14,10 +16,10 @@ const server = mcpServer({
 server.registerTool("add",{
     title: "Add Numbers",
     description: "Add two numbers",
-    inputSchema: z.object({ 
+    inputSchema: { 
     a: z.number().describe("First number to add"),
     b: z.number().describe("Second number to add")
-})
+}
 
 },
 async ({a, b}) => {
