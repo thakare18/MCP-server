@@ -1,26 +1,12 @@
+import { config} from "dotenv";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import dotenv from "dotenv";
-dotenv.config();  // 
+ // 
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+config();
 
 const tools = [];  // store tools provided by server
-
-const weatherFunctionDeclaration = {
-    name: "getCurrentWeather",
-    description: "Get the current weather in a given location",
-    parameters: {
-        type: "object",
-        properties: {
-            location: {
-                type: "string",
-                description: "The city"
-            },
-        },
-        required: ["location"],
-    },
-};
 
 
 
@@ -46,7 +32,7 @@ const client = new Client({
     await client.connect(transport);
 
     // listTools() method on client - this lists all tools that mcp server provides
-    client.listTools().then(response => {
+    client.listTools().then( async response => {
 
         response.tools.forEach(tool=> {
             tools.push({
@@ -60,7 +46,17 @@ const client = new Client({
                 }
             })
         })
-        console.log("Tools provided by server:", tools);
+        const aiResponse = await ai.models.generateContent({
+  model: 'gemini-2.0-flash',
+  contents: 'add 2 and 3',
+  config: {
+    tools: [{
+      functionDeclarations: tools
+    }],
+    
+  },
+});
+console.log("AI Response:", aiResponse);
     })
     
 })();
