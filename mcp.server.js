@@ -31,7 +31,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                             description: "Second number to add"
                         }
                     },
-                    required: ["a", "b"]
+                    required: ["a", "b"] // Both 'a' and 'b' are required
                 }
             }
         ]

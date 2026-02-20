@@ -26,7 +26,7 @@ const client = new Client({
     version: "1.0.0"
 });
 
-// wrap in async IIFE to use top-level await
+// wrap in async 
 (async () => {
     // connect the client to the server using the transport (stdio in this case because we use local server)
     await client.connect(transport);
